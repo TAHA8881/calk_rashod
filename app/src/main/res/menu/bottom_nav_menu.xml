@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_all"
+        android:title="Все" />
+    <item
+        android:id="@+id/menu_food"
+        android:title="Еда" />
+    <item
+        android:id="@+id/menu_transport"
+        android:title="Транспорт" />
+    <item
+        android:id="@+id/menu_entertainment"
+        android:title="Развлечения" />
+</menu>
