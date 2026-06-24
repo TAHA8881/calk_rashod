@@ -12,4 +12,7 @@
     <item
         android:id="@+id/menu_entertainment"
         android:title="Развлечения" />
+    <item
+        android:id="@+id/menu_other"
+        android:title="Другое" />
 </menu>
