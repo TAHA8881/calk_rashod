@@ -1,5 +1,6 @@
 package com.example.proba.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,9 @@ import com.example.proba.data.Expense
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ExpenseAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ExpenseAdapter(
+    private val onItemLongClick: (Expense) -> Unit   // 👈 добавляем лямбду
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TYPE_HEADER = 0
@@ -20,6 +23,7 @@ class ExpenseAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: List<Any> = emptyList()
 
     fun submitList(expenses: List<Expense>) {
+        Log.d("FilterDebug", "Adapter submitList: input size=${expenses.size}")
         val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val grouped = expenses.groupBy { dateFormat.format(it.date) }
         val newItems = mutableListOf<Any>()
@@ -28,6 +32,7 @@ class ExpenseAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             newItems.addAll(list)
         }
         items = newItems
+        Log.d("FilterDebug", "Adapter items after grouping: ${items.size}")
         notifyDataSetChanged()
     }
 
@@ -42,7 +47,7 @@ class ExpenseAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             HeaderViewHolder(view)
         } else {
             val view = inflater.inflate(R.layout.item_expense, parent, false)
-            ExpenseViewHolder(view)
+            ExpenseViewHolder(view, onItemLongClick)   // передаём лямбду
         }
     }
 
@@ -60,12 +65,26 @@ class ExpenseAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun bind(date: String) { tvDate.text = date }
     }
 
-    class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ExpenseViewHolder(
+        itemView: View,
+        private val onItemLongClick: (Expense) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
         private val tvCategory: TextView = itemView.findViewById(R.id.tvCategory)
         private val tvAmount: TextView = itemView.findViewById(R.id.tvAmount)
         private val tvComment: TextView = itemView.findViewById(R.id.tvComment)
+        private var currentExpense: Expense? = null
+
+        init {
+            itemView.setOnLongClickListener {
+                currentExpense?.let { expense ->
+                    onItemLongClick(expense)
+                    true
+                } ?: false
+            }
+        }
 
         fun bind(expense: Expense) {
+            currentExpense = expense
             tvCategory.text = expense.category
             tvAmount.text = "${expense.amount} ₽"
             tvComment.text = expense.comment ?: ""

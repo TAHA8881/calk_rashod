@@ -45,6 +45,12 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun deleteExpense(expense: Expense) {
+        viewModelScope.launch {
+            repository.deleteExpense(expense)
+        }
+    }
+
     fun calculateTotal(expenses: List<Expense>): Double {
         return expenses.sumOf { it.amount }
     }

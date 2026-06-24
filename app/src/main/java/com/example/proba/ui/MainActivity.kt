@@ -38,7 +38,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ExpenseAdapter()
+        adapter = ExpenseAdapter { expense ->
+            viewModel.deleteExpense(expense)
+            Toast.makeText(this, "Трата удалена", Toast.LENGTH_SHORT).show()
+        }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter

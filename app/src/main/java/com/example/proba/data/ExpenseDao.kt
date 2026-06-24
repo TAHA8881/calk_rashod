@@ -2,6 +2,7 @@ package com.example.proba.data
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.Delete
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
@@ -9,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 interface ExpenseDao {
     @Insert
     suspend fun insert(expense: Expense)
+
+    @Delete
+    suspend fun delete(expense: Expense)
 
     @Query("SELECT * FROM expenses ORDER BY date DESC")
     fun getAllExpenses(): Flow<List<Expense>>

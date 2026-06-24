@@ -8,6 +8,10 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         expenseDao.insert(expense)
     }
 
+    suspend fun deleteExpense(expense: Expense) {
+        expenseDao.delete(expense)
+    }
+
     fun getAllExpenses(): Flow<List<Expense>> = expenseDao.getAllExpenses()
 
     fun getExpensesByCategory(category: String): Flow<List<Expense>> =
