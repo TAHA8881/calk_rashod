@@ -11,6 +11,7 @@ import com.example.proba.R
 import com.example.proba.databinding.ActivityMainBinding
 import com.example.proba.viewmodel.ExpenseViewModel
 import kotlinx.coroutines.launch
+import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,8 +40,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter = ExpenseAdapter { expense ->
-            viewModel.deleteExpense(expense)
-            Toast.makeText(this, "Трата удалена", Toast.LENGTH_SHORT).show()
+            // Показываем диалог подтверждения
+            AlertDialog.Builder(this)
+                .setTitle("Удалить трату?")
+                .setMessage("Вы уверены, что хотите удалить трату на сумму ${expense.amount} ₽?")
+                .setPositiveButton("Удалить") { _, _ ->
+                    viewModel.deleteExpense(expense)
+                    Toast.makeText(this, "Трата удалена", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Отмена", null)
+                .show()
         }
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
